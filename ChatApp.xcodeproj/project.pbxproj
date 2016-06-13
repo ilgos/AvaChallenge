@@ -15,6 +15,11 @@
 		830024C81D0CFD5300481854 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 830024C61D0CFD5300481854 /* LaunchScreen.storyboard */; };
 		830024D31D0CFD5300481854 /* ChatAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024D21D0CFD5300481854 /* ChatAppTests.m */; };
 		830024DE1D0CFD5300481854 /* ChatAppUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024DD1D0CFD5300481854 /* ChatAppUITests.m */; };
+		830024EC1D0CFD8700481854 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 830024EB1D0CFD8700481854 /* Podfile */; };
+		830024EF1D0CFF2300481854 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024EE1D0CFF2300481854 /* MessagesViewController.m */; };
+		830024F21D0E618600481854 /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024F11D0E618600481854 /* LogInViewController.m */; };
+		830024F51D0E61DF00481854 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024F41D0E61DF00481854 /* SignUpViewController.m */; };
+		927F15B1C1FBB1BF5562D92D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 052AD1DD76D051F879BF2FCE /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		052AD1DD76D051F879BF2FCE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		08EE2215BAB5438D8F2B0845 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		830024B51D0CFD5200481854 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		830024B91D0CFD5300481854 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		830024BB1D0CFD5300481854 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -51,6 +58,14 @@
 		830024D91D0CFD5300481854 /* ChatAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		830024DD1D0CFD5300481854 /* ChatAppUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatAppUITests.m; sourceTree = "<group>"; };
 		830024DF1D0CFD5300481854 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		830024EB1D0CFD8700481854 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		830024ED1D0CFF2300481854 /* MessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesViewController.h; sourceTree = "<group>"; };
+		830024EE1D0CFF2300481854 /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesViewController.m; sourceTree = "<group>"; };
+		830024F01D0E618600481854 /* LogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogInViewController.h; sourceTree = "<group>"; };
+		830024F11D0E618600481854 /* LogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogInViewController.m; sourceTree = "<group>"; };
+		830024F31D0E61DF00481854 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
+		830024F41D0E61DF00481854 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		CD321C2488B6D9E20E48EED4 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927F15B1C1FBB1BF5562D92D /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,13 +94,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C37A391AA0C1046F6B824F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				052AD1DD76D051F879BF2FCE /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		830024AC1D0CFD5200481854 = {
 			isa = PBXGroup;
 			children = (
+				830024EB1D0CFD8700481854 /* Podfile */,
 				830024B71D0CFD5300481854 /* ChatApp */,
 				830024D11D0CFD5300481854 /* ChatAppTests */,
 				830024DC1D0CFD5300481854 /* ChatAppUITests */,
 				830024B61D0CFD5200481854 /* Products */,
+				EECCAB5AA5EB323F853DD58E /* Pods */,
+				0C37A391AA0C1046F6B824F5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,6 +132,12 @@
 				830024BC1D0CFD5300481854 /* AppDelegate.m */,
 				830024BE1D0CFD5300481854 /* ViewController.h */,
 				830024BF1D0CFD5300481854 /* ViewController.m */,
+				830024ED1D0CFF2300481854 /* MessagesViewController.h */,
+				830024EE1D0CFF2300481854 /* MessagesViewController.m */,
+				830024F01D0E618600481854 /* LogInViewController.h */,
+				830024F11D0E618600481854 /* LogInViewController.m */,
+				830024F31D0E61DF00481854 /* SignUpViewController.h */,
+				830024F41D0E61DF00481854 /* SignUpViewController.m */,
 				830024C11D0CFD5300481854 /* Main.storyboard */,
 				830024C41D0CFD5300481854 /* Assets.xcassets */,
 				830024C61D0CFD5300481854 /* LaunchScreen.storyboard */,
@@ -140,6 +173,15 @@
 			path = ChatAppUITests;
 			sourceTree = "<group>";
 		};
+		EECCAB5AA5EB323F853DD58E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CD321C2488B6D9E20E48EED4 /* Pods.debug.xcconfig */,
+				08EE2215BAB5438D8F2B0845 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -147,9 +189,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 830024E21D0CFD5300481854 /* Build configuration list for PBXNativeTarget "ChatApp" */;
 			buildPhases = (
+				A55E7F0FE8EFBB2223718B7A /* Check Pods Manifest.lock */,
 				830024B11D0CFD5200481854 /* Sources */,
 				830024B21D0CFD5200481854 /* Frameworks */,
 				830024B31D0CFD5200481854 /* Resources */,
+				26DD06FB4577CCEFDF69414B /* Embed Pods Frameworks */,
+				2EA729459FFF77750E998991 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -245,6 +290,7 @@
 			files = (
 				830024C81D0CFD5300481854 /* LaunchScreen.storyboard in Resources */,
 				830024C51D0CFD5300481854 /* Assets.xcassets in Resources */,
+				830024EC1D0CFD8700481854 /* Podfile in Resources */,
 				830024C31D0CFD5300481854 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,6 +311,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		26DD06FB4577CCEFDF69414B /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2EA729459FFF77750E998991 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A55E7F0FE8EFBB2223718B7A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		830024B11D0CFD5200481854 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -272,6 +366,9 @@
 			files = (
 				830024C01D0CFD5300481854 /* ViewController.m in Sources */,
 				830024BD1D0CFD5300481854 /* AppDelegate.m in Sources */,
+				830024F51D0E61DF00481854 /* SignUpViewController.m in Sources */,
+				830024F21D0E618600481854 /* LogInViewController.m in Sources */,
+				830024EF1D0CFF2300481854 /* MessagesViewController.m in Sources */,
 				830024BA1D0CFD5300481854 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,6 +510,7 @@
 		};
 		830024E31D0CFD5300481854 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CD321C2488B6D9E20E48EED4 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ChatApp/Info.plist;
@@ -424,6 +522,7 @@
 		};
 		830024E41D0CFD5300481854 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 08EE2215BAB5438D8F2B0845 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ChatApp/Info.plist;
@@ -498,6 +597,7 @@
 				830024E41D0CFD5300481854 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		830024E51D0CFD5300481854 /* Build configuration list for PBXNativeTarget "ChatAppTests" */ = {
 			isa = XCConfigurationList;
@@ -506,6 +606,7 @@
 				830024E71D0CFD5300481854 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		830024E81D0CFD5300481854 /* Build configuration list for PBXNativeTarget "ChatAppUITests" */ = {
 			isa = XCConfigurationList;
@@ -514,6 +615,7 @@
 				830024EA1D0CFD5300481854 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
