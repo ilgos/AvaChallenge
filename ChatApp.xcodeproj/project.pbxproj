@@ -19,6 +19,9 @@
 		830024EF1D0CFF2300481854 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024EE1D0CFF2300481854 /* MessagesViewController.m */; };
 		830024F21D0E618600481854 /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024F11D0E618600481854 /* LogInViewController.m */; };
 		830024F51D0E61DF00481854 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024F41D0E61DF00481854 /* SignUpViewController.m */; };
+		830024F81D0F7E5800481854 /* SKSConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 830024F71D0F7E5800481854 /* SKSConfiguration.mm */; };
+		8326C6FD1D10C4A800ABCDAF /* CreateProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8326C6FC1D10C4A800ABCDAF /* CreateProfileTableViewController.m */; };
+		8326C7001D11EA6F00ABCDAF /* ConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8326C6FF1D11EA6F00ABCDAF /* ConversationsTableViewController.m */; };
 		927F15B1C1FBB1BF5562D92D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 052AD1DD76D051F879BF2FCE /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +68,12 @@
 		830024F11D0E618600481854 /* LogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogInViewController.m; sourceTree = "<group>"; };
 		830024F31D0E61DF00481854 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
 		830024F41D0E61DF00481854 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
+		830024F61D0F7E5800481854 /* SKSConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKSConfiguration.h; sourceTree = "<group>"; };
+		830024F71D0F7E5800481854 /* SKSConfiguration.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKSConfiguration.mm; sourceTree = "<group>"; };
+		8326C6FB1D10C4A800ABCDAF /* CreateProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateProfileTableViewController.h; sourceTree = "<group>"; };
+		8326C6FC1D10C4A800ABCDAF /* CreateProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateProfileTableViewController.m; sourceTree = "<group>"; };
+		8326C6FE1D11EA6F00ABCDAF /* ConversationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationsTableViewController.h; sourceTree = "<group>"; };
+		8326C6FF1D11EA6F00ABCDAF /* ConversationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationsTableViewController.m; sourceTree = "<group>"; };
 		CD321C2488B6D9E20E48EED4 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +137,8 @@
 		830024B71D0CFD5300481854 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				830024F61D0F7E5800481854 /* SKSConfiguration.h */,
+				830024F71D0F7E5800481854 /* SKSConfiguration.mm */,
 				830024BB1D0CFD5300481854 /* AppDelegate.h */,
 				830024BC1D0CFD5300481854 /* AppDelegate.m */,
 				830024BE1D0CFD5300481854 /* ViewController.h */,
@@ -138,6 +149,10 @@
 				830024F11D0E618600481854 /* LogInViewController.m */,
 				830024F31D0E61DF00481854 /* SignUpViewController.h */,
 				830024F41D0E61DF00481854 /* SignUpViewController.m */,
+				8326C6FB1D10C4A800ABCDAF /* CreateProfileTableViewController.h */,
+				8326C6FC1D10C4A800ABCDAF /* CreateProfileTableViewController.m */,
+				8326C6FE1D11EA6F00ABCDAF /* ConversationsTableViewController.h */,
+				8326C6FF1D11EA6F00ABCDAF /* ConversationsTableViewController.m */,
 				830024C11D0CFD5300481854 /* Main.storyboard */,
 				830024C41D0CFD5300481854 /* Assets.xcassets */,
 				830024C61D0CFD5300481854 /* LaunchScreen.storyboard */,
@@ -366,10 +381,13 @@
 			files = (
 				830024C01D0CFD5300481854 /* ViewController.m in Sources */,
 				830024BD1D0CFD5300481854 /* AppDelegate.m in Sources */,
+				830024F81D0F7E5800481854 /* SKSConfiguration.mm in Sources */,
 				830024F51D0E61DF00481854 /* SignUpViewController.m in Sources */,
 				830024F21D0E618600481854 /* LogInViewController.m in Sources */,
+				8326C6FD1D10C4A800ABCDAF /* CreateProfileTableViewController.m in Sources */,
 				830024EF1D0CFF2300481854 /* MessagesViewController.m in Sources */,
 				830024BA1D0CFD5300481854 /* main.m in Sources */,
+				8326C7001D11EA6F00ABCDAF /* ConversationsTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

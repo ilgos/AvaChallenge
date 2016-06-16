@@ -9,15 +9,29 @@
 #import "MessagesViewController.h"
 #import "LogInViewController.h"
 #import "SignUpViewController.h"
-
+#import "SKSConfiguration.h"
+#import "CreateProfileTableViewController.h"
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import <SpeechKit/SpeechKit.h>
+#import <SpeechKit/SKTransaction.h>
 
-@interface MessagesViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate>
-
+@interface MessagesViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, SKTransactionDelegate>
+@property (nonatomic, strong) SKSession *skSession;
+@property (nonatomic, strong) SKTransaction *skTransaction;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *recordButton;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
+@property (strong, nonatomic) NSString *language;
+@property (strong, nonatomic) NSString *recognitionType;
+@property (nonatomic) BOOL isRecording;
+@property (assign, nonatomic) SKTransactionEndOfSpeechDetection endpointer;
 @end
 
 @implementation MessagesViewController
+
+@synthesize language = _language;
+@synthesize recognitionType = _recognitionType;
+@synthesize endpointer = _endpointer;
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -37,30 +51,18 @@
     self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
     
-    PFUser *currentUser = [PFUser currentUser];
     
-    if (!currentUser) {
-        LogInViewController *logInController = [[LogInViewController alloc] init];
-        logInController.signUpController = [[SignUpViewController alloc] init];
-        logInController.signUpController.delegate = self;
-        logInController.delegate = self;
-        logInController.fields = (PFLogInFieldsUsernameAndPassword
-                                  | PFLogInFieldsLogInButton
-                                  | PFLogInFieldsSignUpButton
-                                  | PFLogInFieldsPasswordForgotten);
-        
-        [self presentViewController:logInController animated:YES completion:nil];
-    }
-    else {
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setObject:[PFUser currentUser] forKey:@"user"];
-        [installation setObject:[PFUser currentUser].objectId forKey:@"userObjectID"];
-        [installation saveInBackground];
-        [currentUser incrementKey:@"RunCount"];
-        [currentUser saveInBackground];
+    
+    PFUser *currentUser = [PFUser currentUser];
+    if (currentUser) {
         [self senderId];
         [self senderDisplayName];
         [self loadMessages];
+        _recognitionType = SKTransactionSpeechTypeDictation;
+        _endpointer = SKTransactionEndOfSpeechDetectionShort;
+        _language = @"eng-USA";
+        
+        self.skSession = [[SKSession alloc] initWithURL:[NSURL URLWithString:SKSServerUrl] appToken:SKSAppKey];
     }
 }
 
@@ -193,9 +195,9 @@
     /**
      *  iOS7-style sender name labels
      */
-    if ([message.senderId isEqualToString:self.senderId]) {
-        return nil;
-    }
+//    if ([message.senderId isEqualToString:self.senderId]) {
+//        return nil;
+//    }
     
     if (indexPath.item - 1 > 0) {
         JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
@@ -291,9 +293,9 @@
      *  iOS7-style sender name labels
      */
     JSQMessage *currentMessage = [self.messages objectAtIndex:indexPath.item];
-    if ([[currentMessage senderId] isEqualToString:self.senderId]) {
-        return 0.0f;
-    }
+//    if ([[currentMessage senderId] isEqualToString:self.senderId]) {
+//        return 0.0f;
+//    }
     
     if (indexPath.item - 1 > 0) {
         JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
@@ -434,7 +436,6 @@
 - (BOOL)composerTextView:(JSQMessagesComposerTextView *)textView shouldPasteWithSender:(id)sender
 {
     if ([UIPasteboard generalPasteboard].image) {
-        // If there's an image in the pasteboard, construct a media item with that image and `send` it.
         JSQPhotoMediaItem *item = [[JSQPhotoMediaItem alloc] initWithImage:[UIPasteboard generalPasteboard].image];
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.senderId
                                                  senderDisplayName:self.senderDisplayName
@@ -446,6 +447,136 @@
     }
     return YES;
 }
+
+- (IBAction)clickedSettingsButton:(id)sender {
+    CreateProfileTableViewController  *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateProfileTableViewController"];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
+    [self presentViewController:navController animated:YES completion:nil];
+}
+
+- (IBAction)clearConversation:(id)sender {
+    [self.messages removeAllObjects];
+    [self.collectionView reloadData];
+}
+
+- (IBAction)startRecording:(id)sender {
+    if ([self.recordButton.title isEqualToString:@"Record"]) {
+        [self.recordButton setTitle:@"Stop"];
+        NSLog(@"recording");
+        self.isRecording = YES;
+        self.skTransaction = [_skSession recognizeWithType:self.recognitionType
+                                             detection:self.endpointer
+                                              language:self.language
+                                              delegate:self];
+    }
+    else {
+        self.isRecording = NO;
+        [self.recordButton setTitle:@"Record"];
+        [self.skTransaction stopRecording];
+        [self resetTransaction];
+        NSLog(@"stopped");
+    }
+}
+
+
+# pragma mark - SKTransactionDelegate
+
+- (void)transactionDidBeginRecording:(SKTransaction *)transaction
+{
+    [self log:@"transactionDidBeginRecording"];
+}
+
+- (void)transactionDidFinishRecording:(SKTransaction *)transaction
+{
+    [self log:@"transactionDidFinishRecording"];
+}
+
+- (void)transaction:(SKTransaction *)transaction didReceiveRecognition:(SKRecognition *)recognition
+{
+    [self log:[NSString stringWithFormat:@"didReceiveRecognition: %@", recognition.text]];
+    
+    JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.senderId
+                                             senderDisplayName:self.senderDisplayName
+                                                          date:[NSDate date]
+                                                          text:recognition.text];
+    NSLog(@"%@", message);
+    
+    [self.messages addObject:message];
+    
+    [self finishSendingMessageAnimated:YES];
+}
+
+- (void)transaction:(SKTransaction *)transaction didReceiveServiceResponse:(NSDictionary *)response
+{
+    [self log:[NSString stringWithFormat:@"didReceiveServiceResponse: %@", response]];
+}
+
+- (void)transaction:(SKTransaction *)transaction didFinishWithSuggestion:(NSString *)suggestion
+{
+    [self log:@"didFinishWithSuggestion"];
+    
+    if (self.isRecording) {
+        [self startTransactionAgain];
+    }
+}
+
+-(void)startTransactionAgain {
+    self.skTransaction = [_skSession recognizeWithType:self.recognitionType
+                                             detection:self.endpointer
+                                              language:self.language
+                                              delegate:self];
+}
+
+- (void)transaction:(SKTransaction *)transaction didFailWithError:(NSError *)error suggestion:(NSString *)suggestion
+{
+    [self log:[NSString stringWithFormat:@"didFailWithError: %@. %@", [error description], suggestion]];
+    
+    if (self.isRecording) {
+        [self startTransactionAgain];
+    }
+}
+
+
+
+#pragma mark - Helpers
+
+- (void)log:(NSString *)message
+{
+    NSLog(@"%@", message);
+//    self.logTextView.text = [self.logTextView.text stringByAppendingFormat:@"%@\n", message];
+}
+
+- (void)resetTransaction
+{
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        self.skTransaction = nil;
+//        [_toggleRecogButton setTitle:@"recognizeWithType" forState:UIControlStateNormal];
+//        [_toggleRecogButton setEnabled:YES];
+    }];
+}
+
+- (void)loadEarcons
+{
+    // Load all of the earcons from disk
+    
+    NSString* startEarconPath = [[NSBundle mainBundle] pathForResource:@"sk_start" ofType:@"pcm"];
+    NSString* stopEarconPath = [[NSBundle mainBundle] pathForResource:@"sk_stop" ofType:@"pcm"];
+    NSString* errorEarconPath = [[NSBundle mainBundle] pathForResource:@"sk_error" ofType:@"pcm"];
+    
+    SKPCMFormat* audioFormat = [[SKPCMFormat alloc] init];
+    audioFormat.sampleFormat = SKPCMSampleFormatSignedLinear16;
+    audioFormat.sampleRate = 16000;
+    audioFormat.channels = 1;
+    
+    // Attach them to the session
+    
+    _skSession.startEarcon = [[SKAudioFile alloc] initWithURL:[NSURL fileURLWithPath:startEarconPath] pcmFormat:audioFormat];
+    _skSession.endEarcon = [[SKAudioFile alloc] initWithURL:[NSURL fileURLWithPath:stopEarconPath] pcmFormat:audioFormat];
+    _skSession.errorEarcon = [[SKAudioFile alloc] initWithURL:[NSURL fileURLWithPath:errorEarconPath] pcmFormat:audioFormat];
+}
+
 
 // sender ID and sender display name
 
@@ -459,7 +590,7 @@
 - (NSString *)senderDisplayName {
     PFUser *currentUser = [PFUser currentUser];
     if (currentUser) {
-        return [currentUser objectForKey:@"username"];
+        return [currentUser objectForKey:@"displayUsername"];
     }
     return @"no one";
 }

@@ -8,9 +8,11 @@
 
 #import <JSQMessagesViewController/JSQMessagesViewController.h>
 #import <JSQMessages.h>
+#import <Parse/Parse.h>
 
 @interface MessagesViewController : JSQMessagesViewController <JSQMessagesComposerTextViewPasteDelegate,UIActionSheetDelegate>
 
+@property (nonatomic, strong) PFObject *conversation;
 @property (nonatomic, strong) NSDictionary *users;
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (strong, nonatomic) JSQMessagesBubbleImage *outgoingBubbleImageData;
