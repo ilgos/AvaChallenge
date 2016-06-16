@@ -41,6 +41,7 @@
     [super viewDidLoad];
     self.title = @"Ava";
     self.inputToolbar.contentView.textView.pasteDelegate = self;
+    self.showLoadEarlierMessagesHeader = NO;
     [self.inputToolbar setHidden:YES];
     self.navigationController.toolbarHidden = NO;
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
@@ -50,8 +51,6 @@
     
     self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
-    
-    
     
     PFUser *currentUser = [PFUser currentUser];
     if (currentUser) {
@@ -66,45 +65,47 @@
     }
 }
 
-- (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
-    [self dismissViewControllerAnimated:YES completion:^{
-        PFUser *currentUser = [PFUser currentUser];
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setObject:[PFUser currentUser] forKey:@"user"];
-        [installation setObject:[PFUser currentUser].objectId forKey:@"userObjectID"];
-        [installation saveInBackground];
-        [currentUser incrementKey:@"RunCount"];
-        [currentUser saveInBackground];
-        [self senderId];
-        [self senderDisplayName];
-        [self loadMessages];
-    }];
-}
-
-- (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-
-- (void)logInViewController:(PFLogInViewController *)controller
-               didLogInUser:(PFUser *)user {
-    [self dismissViewControllerAnimated:YES completion:^{
-        PFUser *currentUser = [PFUser currentUser];
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setObject:[PFUser currentUser] forKey:@"user"];
-        [installation setObject:[PFUser currentUser].objectId forKey:@"userObjectID"];
-        [installation saveInBackground];
-        [currentUser incrementKey:@"RunCount"];
-        [currentUser saveInBackground];
-        [self senderId];
-        [self senderDisplayName];
-        [self loadMessages];
-    }];
-}
-
-- (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+//
+//
+//- (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        PFUser *currentUser = [PFUser currentUser];
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setObject:[PFUser currentUser] forKey:@"user"];
+//        [installation setObject:[PFUser currentUser].objectId forKey:@"userObjectID"];
+//        [installation saveInBackground];
+//        [currentUser incrementKey:@"RunCount"];
+//        [currentUser saveInBackground];
+//        [self senderId];
+//        [self senderDisplayName];
+//        [self loadMessages];
+//    }];
+//}
+//
+//- (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController {
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
+//
+//
+//- (void)logInViewController:(PFLogInViewController *)controller
+//               didLogInUser:(PFUser *)user {
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        PFUser *currentUser = [PFUser currentUser];
+//        PFInstallation *installation = [PFInstallation currentInstallation];
+//        [installation setObject:[PFUser currentUser] forKey:@"user"];
+//        [installation setObject:[PFUser currentUser].objectId forKey:@"userObjectID"];
+//        [installation saveInBackground];
+//        [currentUser incrementKey:@"RunCount"];
+//        [currentUser saveInBackground];
+//        [self senderId];
+//        [self senderDisplayName];
+//        [self loadMessages];
+//    }];
+//}
+//
+//- (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController {
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 
 
 - (void)didReceiveMemoryWarning {
@@ -114,12 +115,29 @@
 
 -(void)loadMessages {
     self.messages = [[NSMutableArray alloc] init];
-    if (self.messages.count == 0) {
-        self.showLoadEarlierMessagesHeader = NO;
-    }
-    else {
-        self.showLoadEarlierMessagesHeader = YES;
-    }
+    PFQuery *query = [PFQuery queryWithClassName:@"Message"];
+    [query whereKey:@"conversation" equalTo:self.conversation];
+    [query includeKey:@"sender"];
+    [query orderByAscending:@"createdAt"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"%@ %@", error, [error userInfo]);
+        }
+        if (objects) {
+            for (PFObject *object in objects) {
+                PFUser *sender = [object objectForKey:@"sender"];
+                NSDate *createdAt = object.createdAt;
+                NSString *displayName = [sender objectForKey:@"displayUsername"];
+                NSString *messageText = [object objectForKey:@"text"];
+                JSQMessage *message = [[JSQMessage alloc] initWithSenderId:sender.objectId
+                                                         senderDisplayName:displayName
+                                                                      date:createdAt
+                                                                      text:messageText];
+                [self.messages addObject:message];
+            }
+            [self.collectionView reloadData];
+        }
+    }];
 }
 
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -420,9 +438,7 @@
 
 - (void)addVideoMediaMessage
 {
-    // don't have a real video, just pretending
     NSURL *videoURL = [NSURL URLWithString:@"file://"];
-    
     JSQVideoMediaItem *videoItem = [[JSQVideoMediaItem alloc] initWithFileURL:videoURL isReadyToPlay:YES];
     JSQMessage *videoMessage = [JSQMessage messageWithSenderId:@"123"
                                                    displayName:@"123"
@@ -430,8 +446,6 @@
     [self.messages addObject:videoMessage];
     [self finishSendingMessageAnimated:YES];
 }
-
-
 
 - (BOOL)composerTextView:(JSQMessagesComposerTextView *)textView shouldPasteWithSender:(id)sender
 {
@@ -446,14 +460,6 @@
         return NO;
     }
     return YES;
-}
-
-- (IBAction)clickedSettingsButton:(id)sender {
-    CreateProfileTableViewController  *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateProfileTableViewController"];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
-    [self presentViewController:navController animated:YES completion:nil];
 }
 
 - (IBAction)clearConversation:(id)sender {
@@ -502,6 +508,16 @@
                                                           date:[NSDate date]
                                                           text:recognition.text];
     NSLog(@"%@", message);
+    
+    PFObject *newMessage = [PFObject objectWithClassName:@"Message"];
+    [newMessage setObject:[PFUser currentUser] forKey:@"sender"];
+    [newMessage setObject:recognition.text forKey:@"text"];
+    [newMessage setObject:self.conversation forKey:@"conversation"];
+    [newMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        if (succeeded) {
+            NSLog(@"succeeded");
+        }
+    }];
     
     [self.messages addObject:message];
     
