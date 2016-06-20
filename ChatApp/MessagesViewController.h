@@ -8,6 +8,7 @@
 
 #import <JSQMessagesViewController/JSQMessagesViewController.h>
 #import "JSQMessages.h"
+
 #import <Parse/Parse.h>
 
 @interface MessagesViewController : JSQMessagesViewController <JSQMessagesComposerTextViewPasteDelegate, UIActionSheetDelegate>
