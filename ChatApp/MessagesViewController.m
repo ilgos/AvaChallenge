@@ -7,17 +7,19 @@
 //
 
 #import "MessagesViewController.h"
-#import "LogInViewController.h"
-#import "SignUpViewController.h"
 #import "SKSConfiguration.h"
-#import "CreateProfileTableViewController.h"
+
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
 #import <SpeechKit/SpeechKit.h>
 #import <SpeechKit/SKTransaction.h>
+#import <PubNub/PubNub.h>
+#import <CoreLocation/CoreLocation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
-@interface MessagesViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, SKTransactionDelegate>
+@interface MessagesViewController () <PFLogInViewControllerDelegate, PFSignUpViewControllerDelegate, SKTransactionDelegate, PNObjectEventListener, CBPeripheralManagerDelegate>
 @property (nonatomic, strong) SKSession *skSession;
+@property (nonatomic) PubNub *client;
 @property (nonatomic, strong) SKTransaction *skTransaction;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *recordButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
@@ -25,6 +27,10 @@
 @property (strong, nonatomic) NSString *recognitionType;
 @property (nonatomic) BOOL isRecording;
 @property (assign, nonatomic) SKTransactionEndOfSpeechDetection endpointer;
+@property (strong, nonatomic) CLBeaconRegion *myBeaconRegion;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) NSDictionary *myBeaconData;
+@property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @end
 
 @implementation MessagesViewController
@@ -33,15 +39,36 @@
 @synthesize recognitionType = _recognitionType;
 @synthesize endpointer = _endpointer;
 
+- (IBAction)emitBeacon:(id)sender {
+
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSString *uuidString = [[NSUUID UUID] UUIDString];
+    NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:uuidString];
+
+    self.myBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:uuid
+                                                                  major:1
+                                                                  minor:1
+                                                             identifier:self.conversation.objectId];
+    
+    // pubnub stuff
+    PNConfiguration *configuration = [PNConfiguration configurationWithPublishKey:@"pub-c-c14e87ca-0f8e-4bd8-baeb-46ef3f67e798"
+                                                                     subscribeKey:@"sub-c-fec8eca2-33f6-11e6-9060-0619f8945a4f"];
+    
+    self.client = [PubNub clientWithConfiguration:configuration];
+    [self.client addListener:self];
+    NSString *conversationID = self.conversation.objectId;
+    [self.client subscribeToChannels: @[conversationID] withPresence:NO];
+    
     self.title = @"Ava";
     self.inputToolbar.contentView.textView.pasteDelegate = self;
-    self.showLoadEarlierMessagesHeader = NO;
     [self.inputToolbar setHidden:YES];
     self.navigationController.toolbarHidden = NO;
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
@@ -65,48 +92,63 @@
     }
 }
 
-//
-//
-//- (void)signUpViewController:(PFSignUpViewController *)signUpController didSignUpUser:(PFUser *)user {
-//    [self dismissViewControllerAnimated:YES completion:^{
-//        PFUser *currentUser = [PFUser currentUser];
-//        PFInstallation *installation = [PFInstallation currentInstallation];
-//        [installation setObject:[PFUser currentUser] forKey:@"user"];
-//        [installation setObject:[PFUser currentUser].objectId forKey:@"userObjectID"];
-//        [installation saveInBackground];
-//        [currentUser incrementKey:@"RunCount"];
-//        [currentUser saveInBackground];
-//        [self senderId];
-//        [self senderDisplayName];
-//        [self loadMessages];
-//    }];
-//}
-//
-//- (void)signUpViewControllerDidCancelSignUp:(PFSignUpViewController *)signUpController {
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
-//
-//
-//- (void)logInViewController:(PFLogInViewController *)controller
-//               didLogInUser:(PFUser *)user {
-//    [self dismissViewControllerAnimated:YES completion:^{
-//        PFUser *currentUser = [PFUser currentUser];
-//        PFInstallation *installation = [PFInstallation currentInstallation];
-//        [installation setObject:[PFUser currentUser] forKey:@"user"];
-//        [installation setObject:[PFUser currentUser].objectId forKey:@"userObjectID"];
-//        [installation saveInBackground];
-//        [currentUser incrementKey:@"RunCount"];
-//        [currentUser saveInBackground];
-//        [self senderId];
-//        [self senderDisplayName];
-//        [self loadMessages];
-//    }];
-//}
-//
-//- (void)logInViewControllerDidCancelLogIn:(PFLogInViewController *)logInController {
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
+- (void)client:(PubNub *)client didReceiveMessage:(PNMessageResult *)message {
+    
+    // Handle new message stored in message.data.message
+    if (message.data.actualChannel) {
+        
+        // Message has been received on channel group stored in
+        // message.data.subscribedChannel
+    }
+    else {
+        
+        // Message has been received on channel stored in
+        // message.data.subscribedChannel
+    }
+    NSLog(@"Received message: %@ on channel %@ at %@", message.data.message,
+          message.data.subscribedChannel, message.data.timetoken);
+    
+    NSString *senderId = [message.data.message objectForKey:@"senderId"];
+    if (![senderId isEqualToString:self.senderId]) {
+        NSString *senderDisplayName = [message.data.message objectForKey:@"senderDisplayName"];
+        NSString *text = [message.data.message objectForKey:@"text"];
+        
+        JSQMessage *jsqmessage = [[JSQMessage alloc] initWithSenderId:senderId
+                                                    senderDisplayName:senderDisplayName
+                                                                 date:[NSDate date]
+                                                                 text:text];
+        
+        [self.messages addObject:jsqmessage];
+        [self.collectionView reloadData];
+        [self finishSendingMessageAnimated:YES];
+    }
+}
 
+- (void)client:(PubNub *)client didReceiveStatus:(PNSubscribeStatus *)status {
+    
+    if (status.category == PNUnexpectedDisconnectCategory) {
+        // This event happens when radio / connectivity is lost
+    }
+    
+    else if (status.category == PNConnectedCategory) {
+        
+        // Connect event. You can do stuff like publish, and know you'll get it.
+        // Or just use the connected event to confirm you are subscribed for
+        // UI / internal notifications, etc
+        
+    }
+    else if (status.category == PNReconnectedCategory) {
+        
+        // Happens as part of our regular operation. This event happens when
+        // radio / connectivity is lost, then regained.
+    }
+    else if (status.category == PNDecryptionErrorCategory) {
+        
+        // Handle messsage decryption error. Probably client configured to
+        // encrypt messages and on live data feed it received plain text.
+    }
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -114,7 +156,6 @@
 }
 
 -(void)loadMessages {
-    self.messages = [[NSMutableArray alloc] init];
     PFQuery *query = [PFQuery queryWithClassName:@"Message"];
     [query whereKey:@"conversation" equalTo:self.conversation];
     [query includeKey:@"sender"];
@@ -124,6 +165,7 @@
             NSLog(@"%@ %@", error, [error userInfo]);
         }
         if (objects) {
+            NSMutableArray *tempArray = [[NSMutableArray alloc] init];
             for (PFObject *object in objects) {
                 PFUser *sender = [object objectForKey:@"sender"];
                 NSDate *createdAt = object.createdAt;
@@ -133,11 +175,14 @@
                                                          senderDisplayName:displayName
                                                                       date:createdAt
                                                                       text:messageText];
-                [self.messages addObject:message];
+                [tempArray addObject:message];
             }
+            self.messages = tempArray;
             [self.collectionView reloadData];
+            [self finishSendingMessageAnimated:YES];
         }
     }];
+    
 }
 
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -198,7 +243,7 @@
      *
      *  Show a timestamp for every 3rd message
      */
-    if (indexPath.item % 3 == 0) {
+    if (indexPath.item % 10 == 0) {
         JSQMessage *message = [self.messages objectAtIndex:indexPath.item];
         return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
     }
@@ -217,12 +262,12 @@
 //        return nil;
 //    }
     
-    if (indexPath.item - 1 > 0) {
-        JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
-        if ([[previousMessage senderId] isEqualToString:message.senderId]) {
-            return nil;
-        }
-    }
+//    if (indexPath.item - 1 > 0) {
+//        JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
+//        if ([[previousMessage senderId] isEqualToString:message.senderId]) {
+//            return nil;
+//        }
+//    }
     
     /**
      *  Don't specify attributes to use the defaults.
@@ -297,10 +342,10 @@
      *
      *  Show a timestamp for every 3rd message
      */
-    if (indexPath.item % 3 == 0) {
-        return kJSQMessagesCollectionViewCellLabelHeightDefault;
-    }
-    
+//    if (indexPath.item % 3 == 0) {
+//        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+//    }
+//    
     return 0.0f;
 }
 
@@ -310,17 +355,17 @@
     /**
      *  iOS7-style sender name labels
      */
-    JSQMessage *currentMessage = [self.messages objectAtIndex:indexPath.item];
+//    JSQMessage *currentMessage = [self.messages objectAtIndex:indexPath.item];
 //    if ([[currentMessage senderId] isEqualToString:self.senderId]) {
 //        return 0.0f;
 //    }
     
-    if (indexPath.item - 1 > 0) {
-        JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
-        if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
-            return 0.0f;
-        }
-    }
+//    if (indexPath.item - 1 > 0) {
+//        JSQMessage *previousMessage = [self.messages objectAtIndex:indexPath.item - 1];
+//        if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
+//            return 0.0f;
+//        }
+//    }
     
     return kJSQMessagesCollectionViewCellLabelHeightDefault;
 }
@@ -516,6 +561,28 @@
     [newMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
         if (succeeded) {
             NSLog(@"succeeded");
+            NSDictionary *messageDictionary = @{@"channel" : self.conversation.objectId,
+                                                @"text" : recognition.text,
+                                                @"senderId" : [PFUser currentUser].objectId,
+                                                @"senderDisplayName" : [[PFUser currentUser] objectForKey:@"displayUsername"]};
+            
+            [self.client publish:messageDictionary toChannel:self.conversation.objectId
+                  withCompletion:^(PNPublishStatus *status) {
+                      
+                      // Check whether request successfully completed or not.
+                      if (!status.isError) {
+                          NSLog(@"successfully sent publish method with text %@", recognition.text);
+                          // Message successfully published to specified channel.
+                      }
+                      // Request processing failed.
+                      else {
+                          
+                          // Handle message publish error. Check 'category' property to find out possible issue
+                          // because of which request did fail.
+                          //
+                          // Request can be resent using: [status retry];
+                      }
+                  }];
         }
     }];
     

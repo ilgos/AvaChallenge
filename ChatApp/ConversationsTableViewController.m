@@ -7,15 +7,22 @@
 //
 
 #import "ConversationsTableViewController.h"
-#import "CreateProfileTableViewController.h"
 #import "MessagesViewController.h"
 
+#import <CoreLocation/CoreLocation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 #import <Parse/Parse.h>
 
-@interface ConversationsTableViewController ()
+@interface ConversationsTableViewController () <CBPeripheralManagerDelegate>
+
 @property (nonatomic, strong) NSMutableArray *conversations;
 @property (nonatomic, strong) PFObject *selectedConversation;
+@property (strong, nonatomic) CLBeaconRegion *myBeaconRegion;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) NSDictionary *myBeaconData;
+@property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @end
+
 
 @implementation ConversationsTableViewController
 
@@ -87,9 +94,11 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     PFObject *conversation = [self.conversations objectAtIndex:indexPath.row];
     cell.textLabel.text = [conversation objectForKey:@"name"];
-    NSDate *now = [NSDate date];
-    cell.detailTextLabel.text = [self stringWithStartDate:conversation.createdAt andEndDate:now];
-    
+    NSString *formatString = [NSDateFormatter dateFormatFromTemplate:@"EdMMM" options:0 locale:[NSLocale currentLocale]];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:formatString];
+    NSString *dateString = [dateFormatter stringFromDate:conversation.createdAt];
+    cell.detailTextLabel.text = dateString;
     return cell;
 }
 
@@ -97,23 +106,44 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     PFUser *currentUser = [PFUser currentUser];
-    if ([[currentUser objectForKey:@"hasInfo"] isEqualToString:@"YES"]){
+    NSString *displayName = [currentUser objectForKey:@"displayUsername"];
+    if (!displayName) {
+        displayName = @"";
+    }
+    if (displayName.length > 0){
+        NSLog(@"%@", displayName);
         self.selectedConversation = [self.conversations objectAtIndex:indexPath.row];
         [self performSegueWithIdentifier:@"showConversation" sender:self];
     }
     else {
-        NSString *alertTitle = @"User Info";
-        NSString *alertMessage = @"You need to add a photo and a display name before entering a conversation";
+        NSString *alertTitle = @"Enter Name";
+        NSString *alertMessage = @"Please enter a name below so that others can identify you in conversations";
+        
         UIAlertController *alertController = [UIAlertController
                                               alertControllerWithTitle:alertTitle
                                               message:alertMessage
                                               preferredStyle:UIAlertControllerStyleAlert];
+        
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField)
+         {
+             textField.placeholder = @"Name";
+             textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+         }];
+        
         UIAlertAction *create = [UIAlertAction
                                  actionWithTitle:@"Create"
                                  style:UIAlertActionStyleDefault
                                  handler:^(UIAlertAction *action)
                                  {
-                                     [self showSettings:nil];
+                                     PFUser *currentUser = [PFUser currentUser];
+                                     UITextField *textField = alertController.textFields.firstObject;
+                                     NSString *displayName = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                                     [currentUser setObject:displayName forKey:@"displayUsername"];
+                                     [currentUser setObject:@"YES" forKey:@"hasInfo"];
+                                     [currentUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                         self.selectedConversation = [self.conversations objectAtIndex:indexPath.row];
+                                         [self performSegueWithIdentifier:@"showConversation" sender:self];
+                                     }];
                                  }];
         
         [alertController addAction:create];
@@ -222,15 +252,8 @@
     return timeSince;
 }
 
-- (IBAction)showSettings:(id)sender {
-    CreateProfileTableViewController  *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CreateProfileTableViewController"];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
-    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    
-    [self presentViewController:navController animated:YES completion:nil];
-}
-
 #pragma mark - Navigation
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     MessagesViewController *destinationController = (MessagesViewController *)segue.destinationViewController;
     destinationController.conversation = self.selectedConversation;

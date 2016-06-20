@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2DE169582BB641E5F87A4956 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AFE592BADC687E5D262DD36 /* Pods.framework */; };
 		830024BA1D0CFD5300481854 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024B91D0CFD5300481854 /* main.m */; };
 		830024BD1D0CFD5300481854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024BC1D0CFD5300481854 /* AppDelegate.m */; };
-		830024C01D0CFD5300481854 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024BF1D0CFD5300481854 /* ViewController.m */; };
 		830024C31D0CFD5300481854 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 830024C11D0CFD5300481854 /* Main.storyboard */; };
 		830024C51D0CFD5300481854 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830024C41D0CFD5300481854 /* Assets.xcassets */; };
 		830024C81D0CFD5300481854 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 830024C61D0CFD5300481854 /* LaunchScreen.storyboard */; };
@@ -17,12 +17,10 @@
 		830024DE1D0CFD5300481854 /* ChatAppUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024DD1D0CFD5300481854 /* ChatAppUITests.m */; };
 		830024EC1D0CFD8700481854 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 830024EB1D0CFD8700481854 /* Podfile */; };
 		830024EF1D0CFF2300481854 /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024EE1D0CFF2300481854 /* MessagesViewController.m */; };
-		830024F21D0E618600481854 /* LogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024F11D0E618600481854 /* LogInViewController.m */; };
-		830024F51D0E61DF00481854 /* SignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830024F41D0E61DF00481854 /* SignUpViewController.m */; };
 		830024F81D0F7E5800481854 /* SKSConfiguration.mm in Sources */ = {isa = PBXBuildFile; fileRef = 830024F71D0F7E5800481854 /* SKSConfiguration.mm */; };
-		8326C6FD1D10C4A800ABCDAF /* CreateProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8326C6FC1D10C4A800ABCDAF /* CreateProfileTableViewController.m */; };
 		8326C7001D11EA6F00ABCDAF /* ConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8326C6FF1D11EA6F00ABCDAF /* ConversationsTableViewController.m */; };
-		927F15B1C1FBB1BF5562D92D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 052AD1DD76D051F879BF2FCE /* libPods.a */; };
+		83D7FE4C1D137637006026BB /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D7FE4A1D137637006026BB /* CoreBluetooth.framework */; };
+		83D7FE4D1D137637006026BB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D7FE4B1D137637006026BB /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,14 +41,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		052AD1DD76D051F879BF2FCE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		08EE2215BAB5438D8F2B0845 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		5AFE592BADC687E5D262DD36 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		830024B51D0CFD5200481854 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		830024B91D0CFD5300481854 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		830024BB1D0CFD5300481854 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		830024BC1D0CFD5300481854 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		830024BE1D0CFD5300481854 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		830024BF1D0CFD5300481854 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		830024C21D0CFD5300481854 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		830024C41D0CFD5300481854 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		830024C71D0CFD5300481854 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -61,19 +57,15 @@
 		830024D91D0CFD5300481854 /* ChatAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		830024DD1D0CFD5300481854 /* ChatAppUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatAppUITests.m; sourceTree = "<group>"; };
 		830024DF1D0CFD5300481854 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		830024EB1D0CFD8700481854 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		830024EB1D0CFD8700481854 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		830024ED1D0CFF2300481854 /* MessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesViewController.h; sourceTree = "<group>"; };
 		830024EE1D0CFF2300481854 /* MessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesViewController.m; sourceTree = "<group>"; };
-		830024F01D0E618600481854 /* LogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogInViewController.h; sourceTree = "<group>"; };
-		830024F11D0E618600481854 /* LogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogInViewController.m; sourceTree = "<group>"; };
-		830024F31D0E61DF00481854 /* SignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpViewController.h; sourceTree = "<group>"; };
-		830024F41D0E61DF00481854 /* SignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpViewController.m; sourceTree = "<group>"; };
 		830024F61D0F7E5800481854 /* SKSConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKSConfiguration.h; sourceTree = "<group>"; };
 		830024F71D0F7E5800481854 /* SKSConfiguration.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SKSConfiguration.mm; sourceTree = "<group>"; };
-		8326C6FB1D10C4A800ABCDAF /* CreateProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateProfileTableViewController.h; sourceTree = "<group>"; };
-		8326C6FC1D10C4A800ABCDAF /* CreateProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateProfileTableViewController.m; sourceTree = "<group>"; };
 		8326C6FE1D11EA6F00ABCDAF /* ConversationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationsTableViewController.h; sourceTree = "<group>"; };
 		8326C6FF1D11EA6F00ABCDAF /* ConversationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationsTableViewController.m; sourceTree = "<group>"; };
+		83D7FE4A1D137637006026BB /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		83D7FE4B1D137637006026BB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		CD321C2488B6D9E20E48EED4 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,7 +74,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				927F15B1C1FBB1BF5562D92D /* libPods.a in Frameworks */,
+				83D7FE4C1D137637006026BB /* CoreBluetooth.framework in Frameworks */,
+				83D7FE4D1D137637006026BB /* CoreLocation.framework in Frameworks */,
+				2DE169582BB641E5F87A4956 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,7 +100,9 @@
 		0C37A391AA0C1046F6B824F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				052AD1DD76D051F879BF2FCE /* libPods.a */,
+				83D7FE4A1D137637006026BB /* CoreBluetooth.framework */,
+				83D7FE4B1D137637006026BB /* CoreLocation.framework */,
+				5AFE592BADC687E5D262DD36 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -137,20 +133,10 @@
 		830024B71D0CFD5300481854 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
-				830024F61D0F7E5800481854 /* SKSConfiguration.h */,
-				830024F71D0F7E5800481854 /* SKSConfiguration.mm */,
 				830024BB1D0CFD5300481854 /* AppDelegate.h */,
 				830024BC1D0CFD5300481854 /* AppDelegate.m */,
-				830024BE1D0CFD5300481854 /* ViewController.h */,
-				830024BF1D0CFD5300481854 /* ViewController.m */,
 				830024ED1D0CFF2300481854 /* MessagesViewController.h */,
 				830024EE1D0CFF2300481854 /* MessagesViewController.m */,
-				830024F01D0E618600481854 /* LogInViewController.h */,
-				830024F11D0E618600481854 /* LogInViewController.m */,
-				830024F31D0E61DF00481854 /* SignUpViewController.h */,
-				830024F41D0E61DF00481854 /* SignUpViewController.m */,
-				8326C6FB1D10C4A800ABCDAF /* CreateProfileTableViewController.h */,
-				8326C6FC1D10C4A800ABCDAF /* CreateProfileTableViewController.m */,
 				8326C6FE1D11EA6F00ABCDAF /* ConversationsTableViewController.h */,
 				8326C6FF1D11EA6F00ABCDAF /* ConversationsTableViewController.m */,
 				830024C11D0CFD5300481854 /* Main.storyboard */,
@@ -165,6 +151,8 @@
 		830024B81D0CFD5300481854 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				830024F61D0F7E5800481854 /* SKSConfiguration.h */,
+				830024F71D0F7E5800481854 /* SKSConfiguration.mm */,
 				830024B91D0CFD5300481854 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -379,12 +367,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				830024C01D0CFD5300481854 /* ViewController.m in Sources */,
 				830024BD1D0CFD5300481854 /* AppDelegate.m in Sources */,
 				830024F81D0F7E5800481854 /* SKSConfiguration.mm in Sources */,
-				830024F51D0E61DF00481854 /* SignUpViewController.m in Sources */,
-				830024F21D0E618600481854 /* LogInViewController.m in Sources */,
-				8326C6FD1D10C4A800ABCDAF /* CreateProfileTableViewController.m in Sources */,
 				830024EF1D0CFF2300481854 /* MessagesViewController.m in Sources */,
 				830024BA1D0CFD5300481854 /* main.m in Sources */,
 				8326C7001D11EA6F00ABCDAF /* ConversationsTableViewController.m in Sources */,
